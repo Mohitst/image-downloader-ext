@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    body {
+      width: 420px;
+      padding: 24px;
+      color: #ffffff;
+      /* Dynamic animated gradient background */
+      background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #1e1b4b);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      overflow-x: hidden;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .icon-container {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #06b6d4, #8b5cf6, #ec4899);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 20px -5px rgba(139, 92, 246, 0.5);
+      position: relative;
+    }
+
+    .icon-container::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(135deg, #06b6d4, #8b5cf6, #ec4899);
+      border-radius: 16px;
+      z-index: -1;
+      filter: blur(10px);
+      opacity: 0.7;
+    }
+
+    .icon-container img {
+      width: 26px;
+      height: 26px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+    
+    .header-text h2 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(to right, #f8fafc, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-text p {
+      font-size: 13px;
+      color: #94a3b8;
+      font-weight: 400;
+      margin-top: 2px;
+    }
+    
+    .input-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      font-size: 13px;
+      color: #cbd5e1;
+      letter-spacing: 0.3px;
+    }
+    
+    input[type="url"], input[type="text"], select {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      font-size: 14px;
+      color: #f8fafc;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    input::placeholder {
+      color: #64748b;
+    }
+    
+    input:focus, select:focus {
+      outline: none;
+      border-color: #8b5cf6;
+      background: rgba(15, 23, 42, 0.8);
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+      transform: translateY(-1px);
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      background-size: 16px;
+      padding-right: 40px;
+      cursor: pointer;
+    }
+    
+    .custom-directory-container {
+      margin-top: 12px;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .custom-directory-container.visible {
+      display: block !important;
+    }
+
+    .directory-input-wrapper {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .directory-browse-btn {
+      padding: 0 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: #f8fafc;
+      cursor: pointer;
+       transition: all 0.2s;
+    }
+
+    .directory-browse-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(1.05);
+    }
+    
+    .directory-preview {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.4);
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+    
+    .preview-path {
+      color: #38bdf8;
+      font-family: 'Fira Code', monospace;
+      margin-left: 6px;
+    }
+    
+    /* Toggle Switch */
+    .toggle-wrapper {
+      display: flex;
+      align-items: center;
+      margin: 24px 0;
+      gap: 12px;
+      cursor: pointer;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: background 0.2s;
+    }
+
+    .toggle-wrapper:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Modern Switch UI instead of vanilla checkbox */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(255, 255, 255, 0.1);
+      transition: .4s;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      border-color: transparent;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 10px #8b5cf6;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .btn {
+      padding: 14px 20px;
+      border: none;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(rgba(255,255,255,0.2), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover::after {
+      opacity: 1;
+    }
+
+    .start-btn {
+      flex: 2;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: white;
+      box-shadow: 0 8px 20px -6px rgba(139, 92, 246, 0.6);
+    }
+    
+    .start-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px -6px rgba(139, 92, 246, 0.8);
+    }
+    
+    .start-btn:active {
+      transform: translateY(0);
+    }
+
+    .start-btn:disabled {
+      background: rgba(255, 255, 255, 0.1);
+      color: #64748b;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+    
+    .clear-btn {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .clear-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+    
+    .status {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      text-align: center;
+      display: none;
+      font-weight: 500;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .status.success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #6ee7b7;
+    }
+    
+    .status.error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+    
+    .status.info {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #7dd3fc;
+    }
+    
+    .progress {
+      margin-top: 20px;
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+    
+    .progress-container {
+      background: rgba(15, 23, 42, 0.4);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #ec4899);
+      width: 0%;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+    
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shimmer 1.5s infinite;
+    }
+    
+    .progress-stats {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 16px;
+    }
+    
+    .stat-item {
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #f8fafc;
+      text-shadow: 0 0 10px rgba(255,255,255,0.2);
+    }
+    
+    .stat-label {
+      font-size: 11px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+    
+    .current-activity {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.1);
+      text-align: center;
+    }
+    
+    .activity-title {
+      font-size: 11px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    
+    .activity-content {
+      font-size: 13px;
+      color: #e2e8f0;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+    
+    .activity-page {
+      font-size: 11px;
+      color: #8b5cf6;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="glass-panel">
+    <div class="header">
+      <div class="icon-container">
+        <!-- Add standard extension icon dynamically updated -->
+        <img src="icon48.png" alt="Icon">
+      </div>
+      <div class="header-text">
+        <h2>Downloader Pro</h2>
+        <p>Premium Web Image Extractor</p>
+      </div>
+    </div>
+    
+    <div class="input-group">
+      <label for="url">Target Website</label>
+      <input type="url" id="url" placeholder="https://example.com" autocomplete="off" />
+    </div>
+    
+    <div class="input-group">
+      <label for="directory">Output Directory</label>
+      <select id="directory">
+        <option value="default">📁 /Downloads/[domain]/</option>
+        <option value="custom">📂 Custom System Route</option>
+      </select>
+      
+      <div class="custom-directory-container" id="customDirectoryContainer">
+        <div class="directory-input-wrapper">
+          <input type="text" id="customDirectory" placeholder="e.g. Portfolio/Images 2026" />
+          <button id="browseBtn" class="directory-browse-btn" title="Information">ℹ️</button>
+        </div>
+        <div class="directory-preview" id="directoryPreview">
+          <span>Target:</span>
+          <span class="preview-path" id="previewPath">Downloads/</span>
+        </div>
+      </div>
+    </div>
+    
+    <label class="toggle-wrapper" for="asZip">
+      <div class="switch">
+        <input type="checkbox" id="asZip">
+        <span class="slider"></span>
+      </div>
+      <span style="font-size: 14px; font-weight: 500;">Bundle as ZIP Archive</span>
+    </label>
+    
+    <div class="button-group">
+      <button id="startBtn" class="btn start-btn">Start Routine</button>
+      <button id="clearBtn" class="btn clear-btn">Reset</button>
+    </div>
+    
+    <div id="status" class="status"></div>
+    
+    <div id="progress" class="progress">
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+        <div class="progress-stats">
+          <div class="stat-item">
+            <div id="pagesFound" class="stat-value">0</div>
+            <div class="stat-label">Pages Scanned</div>
+          </div>
+          <div class="stat-item">
+            <div id="imagesFound" class="stat-value">0</div>
+            <div class="stat-label">Assets Found</div>
+          </div>
+        </div>
+        <div class="current-activity">
+          <div class="activity-title">Live Status</div>
+          <div id="currentImage" class="activity-content">Initializing Engine...</div>
+          <div id="currentPage" class="activity-page"></div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

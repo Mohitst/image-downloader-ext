@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "Image Downloader Extension",
+  "version": "3.4",
+  "description": "Download all images from a website with original names organized by domain",
+  "permissions": [
+    "activeTab",
+    "downloads",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Image Downloader"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}
